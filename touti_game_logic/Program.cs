@@ -10,6 +10,11 @@ namespace touti_game_logic
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Starting matchmaking...");
+            var matchMaking = new MatchMaking();
+            matchMaking.StartClient();
+
+            Console.ReadLine(); // Keep the console open
         }
     }
 }

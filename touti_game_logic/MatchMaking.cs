@@ -13,8 +13,6 @@ class MatchMaking : IConnectionCallbacks, IMatchmakingCallbacks, IInRoomCallback
     {
         this.client.Disconnect();
         this.client.RemoveCallbackTarget(this);
-
-        //TEST
     }
 
     public void StartClient()

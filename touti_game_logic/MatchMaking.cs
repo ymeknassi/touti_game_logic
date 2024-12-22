@@ -9,6 +9,16 @@ class MatchMaking : IConnectionCallbacks, IMatchmakingCallbacks, IInRoomCallback
     private RealtimeClient client = new RealtimeClient();
     private bool quit;
 
+    public void ListPlayers()
+    {
+        Console.WriteLine("Player list Changed");
+
+        foreach (Player player in this.client.CurrentRoom.Players.Values)
+        {
+            Console.WriteLine("Player "+player.ActorNumber);
+        }
+    }
+
     ~MatchMaking()
     {
         this.client.Disconnect();
@@ -55,6 +65,7 @@ class MatchMaking : IConnectionCallbacks, IMatchmakingCallbacks, IInRoomCallback
     {
         Console.WriteLine("OnConnectedToMaster Server: " + this.client.CurrentServerAddress);
         this.QuickMatch();
+    
     }
 
     public void OnConnected()
@@ -103,12 +114,24 @@ class MatchMaking : IConnectionCallbacks, IMatchmakingCallbacks, IInRoomCallback
     public void OnJoinedRoom()
     {
         Console.WriteLine("OnJoinedRoom");
+        if(client.LocalPlayer.IsMasterClient)
+        {
+            Console.WriteLine("Master Client");
+            this.client.CurrentRoom.MaxPlayers = 4;
+        }
+        else
+        {
+            Console.WriteLine("Not Master Client");
+        }
+
         Console.WriteLine("Room Name: " + client.CurrentRoom.Name);
+        ListPlayers();
     }
 
     public void OnPlayerEnteredRoom(Player newPlayer)
     { // This is a method from the IMatchmakingCallbacks interface
         Console.WriteLine("OnPlayerEnteredRoom: " + newPlayer.ActorNumber);
+        ListPlayers();
     }
 
 
@@ -138,6 +161,7 @@ class MatchMaking : IConnectionCallbacks, IMatchmakingCallbacks, IInRoomCallback
     public void OnRoomPropertiesUpdate(PhotonHashtable propertiesThatChanged)
     {
         Console.WriteLine("OnRoomPropertiesUpdate");
+
     }
 
     public void OnPlayerPropertiesUpdate(Player targetPlayer, PhotonHashtable changedProps)

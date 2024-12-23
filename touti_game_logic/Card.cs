@@ -53,24 +53,50 @@ namespace touti_game_logic
             return CardValue.CompareTo(other.CardValue);
         }
 
-        public int CompareTo(Card other, char fireColor)
+        public int CompareTo(Card other, char? fireColor, bool isGameplay = false)
         {
             if (other == null) return 1;
 
-            // Define what makes a card a fire card
-            bool isFireCard = CardColor == fireColor;
-            bool isOtherFireCard = other.CardColor == fireColor;
+            char effectiveFireColor = fireColor ?? 'o';
 
-            if (isFireCard && !isOtherFireCard)
-                return 1;
-            if (!isFireCard && isOtherFireCard)
-                return -1;
+            if (isGameplay)
+            {
+                // Define what makes a card a fire card
+                bool isFireCard = CardColor == effectiveFireColor;
+                bool isOtherFireCard = other.CardColor == effectiveFireColor;
 
-            if (CardColor == other.CardColor)
+                if (isFireCard && !isOtherFireCard)
+                    return 1;
+                if (!isFireCard && isOtherFireCard)
+                    return -1;
+
+                if (CardColor == other.CardColor)
+                    return CardValue.CompareTo(other.CardValue);
+
+                // If colors are different, the first card wins unless the second is a fire card
+                return isOtherFireCard ? -1 : 1;
+            }
+            else
+            {
+                // Define color order
+                List<char> colorOrder = new List<char> { 'o', 'c', 'e', 'b' };
+
+                int thisColorIndex = colorOrder.IndexOf(CardColor);
+                int otherColorIndex = colorOrder.IndexOf(other.CardColor);
+
+                if (thisColorIndex != otherColorIndex)
+                    return thisColorIndex.CompareTo(otherColorIndex);
+
+                // If colors are the same, compare by card points
+                int thisCardPoints = CardPoints[CardValue];
+                int otherCardPoints = CardPoints[other.CardValue];
+
+                if (thisCardPoints != otherCardPoints)
+                    return thisCardPoints.CompareTo(otherCardPoints);
+
+                // If points are the same, compare by card value
                 return CardValue.CompareTo(other.CardValue);
-
-            // If colors are different, the first card wins unless the second is a fire card
-            return isOtherFireCard ? -1 : 1;
+            }
         }
 
         public static bool operator >(Card c1, (Card c2, char fireColor) t)

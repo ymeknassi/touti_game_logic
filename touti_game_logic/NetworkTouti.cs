@@ -40,11 +40,7 @@ namespace touti_game_logic
                     GameData.PartFirstPlayer = (GameData.PartFirstPlayer + 1) % 4;
                 }
 
-                if (GameData.PartFire == null)
-                {
-                    Random random = new Random();
-                    GameData.PartFire = Card.PossibleColors[random.Next(Card.PossibleColors.Count)];
-                }
+               
 
                 if (GameData.PlayerDecks == null)
                 {
@@ -98,7 +94,7 @@ namespace touti_game_logic
             // Sort each player's deck
             for (int i = 0; i < 4; i++)
             {
-                GameData.PlayerDecks[i].Sort(GameData.PartFire ?? ' ');
+                GameData.PlayerDecks[i].Sort(GameData.PartFire ?? 'o');
             }
 
             // Set FullCardDeck to null after distributing the cards

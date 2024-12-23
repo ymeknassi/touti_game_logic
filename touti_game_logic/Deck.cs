@@ -38,7 +38,7 @@ namespace touti_game_logic
             }
         }
 
-        public void Sort(char fireColor)
+        public void Sort(char fireColor = 'o')
         {
             cards.Sort((card1, card2) => card1.CompareTo(card2, fireColor));
         }

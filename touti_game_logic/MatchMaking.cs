@@ -9,16 +9,6 @@ class MatchMaking : IConnectionCallbacks, IMatchmakingCallbacks, IInRoomCallback
     private RealtimeClient client = new RealtimeClient();
     private bool quit;
 
-    public void ListPlayers()
-    {
-        Console.WriteLine("Player list Changed");
-
-        foreach (Player player in this.client.CurrentRoom.Players.Values)
-        {
-            Console.WriteLine("Player "+player.ActorNumber+" "+player.IsMasterClient);
-        }
-    }
-
     ~MatchMaking()
     {
         this.client.Disconnect();

@@ -165,4 +165,12 @@ class MatchMaking : IConnectionCallbacks, IMatchmakingCallbacks, IInRoomCallback
     }
 
     #endregion
+
+    private void ListPlayers()
+    {
+        foreach (var player in client.CurrentRoom.Players.Values)
+        {
+            Console.WriteLine("Player: " + player.NickName);
+        }
+    }
 }

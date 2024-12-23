@@ -48,6 +48,11 @@ namespace touti_game_logic
             return new List<Card>(cards);
         }
 
+        public void RemoveCard(Card card)
+        {
+            cards.Remove(card);
+        }
+
         public IEnumerator<Card> GetEnumerator()
         {
             return cards.GetEnumerator();

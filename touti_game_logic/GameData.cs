@@ -8,49 +8,36 @@ namespace touti_game_logic
 {
     internal static class GameData
     {
-        public static int[] PartScore { get; set; } = new int[2]; // Score for each team
-        public static List<int[]> MatchScoreSheet { get; set; } = new List<int[]>(); // Scores at the end of each round
+        public static int[] PartScore { get; set; } // Score for each team
+        public static List<int[]> MatchScoreSheet { get; set; } // Scores at the end of each round
         public static char? PartFire { get; set; } // Fire color for the current round
         public static int? PartValue { get; set; } // Value of the round
 
         public static int? GamePhase { get; set; } // Phase of the game
-        public static int[] PlayerEngagement { get; set; } = new int[4]; // Engagement for each player
+        public static int[] PlayerEngagement { get; set; } // Engagement for each player
         public static int? EngagedPlayer { get; set; } // Player who got the engagement
 
         public static int? PartFirstPlayer { get; set; } // First player in the round
-        public static Deck PlayedDeck { get; set; } = new Deck(); // Deck containing the cards played in the current play
+        public static Deck PlayedDeck { get; set; } // Deck containing the cards played in the current play
 
-        public static Deck[] PlayerDecks { get; set; } = new Deck[4]; // Deck for each player
-        public static Deck FullCardDeck { get; set; } = new Deck(); // Full deck for the game
+        public static Deck[] PlayerDecks { get; set; } // Deck for each player
+        public static Deck FullCardDeck { get; set; } // Full deck for the game
 
-        public static Deck[] TeamsDecks { get; set; } = new Deck[2]; // Decks for each team
+        public static Deck[] TeamsDecks { get; set; } // Decks for each team
 
-        public static List<char> AlreadySung { get; set; } = new List<char>(); // Colors that were sung in the current round
+        public static List<char> AlreadySung { get; set; } // Colors that were sung in the current round
         public static int? TurnSing { get; set; } // What was sung in the current turn
         public static int? Turn { get; set; } // Turn number
         public static int? TotalSing { get; set; } // Total sing made by the team of the engaged player in a round
-
-        static GameData()
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                PlayerDecks[i] = new Deck();
-            }
-
-            for (int i = 0; i < 2; i++)
-            {
-                TeamsDecks[i] = new Deck();
-            }
-        }
 
         public static string Serialize()
         {
             var serializedData = new StringBuilder();
 
-            if (PartScore != null && PartScore.Length > 0)
+            if (PartScore != null)
                 serializedData.Append($"PartScore:{string.Join(",", PartScore)}|");
 
-            if (MatchScoreSheet != null && MatchScoreSheet.Count > 0)
+            if (MatchScoreSheet != null)
                 serializedData.Append($"MatchScoreSheet:{string.Join(";", MatchScoreSheet.Select(scores => string.Join(",", scores)))}|");
 
             if (PartFire.HasValue)
@@ -62,7 +49,7 @@ namespace touti_game_logic
             if (GamePhase.HasValue)
                 serializedData.Append($"GamePhase:{GamePhase}|");
 
-            if (PlayerEngagement != null && PlayerEngagement.Length > 0)
+            if (PlayerEngagement != null)
                 serializedData.Append($"PlayerEngagement:{string.Join(",", PlayerEngagement)}|");
 
             if (EngagedPlayer.HasValue)
@@ -74,16 +61,16 @@ namespace touti_game_logic
             if (PlayedDeck != null)
                 serializedData.Append($"PlayedDeck:{PlayedDeck.Serialize()}|");
 
-            if (PlayerDecks != null && PlayerDecks.Length > 0)
+            if (PlayerDecks != null)
                 serializedData.Append($"PlayerDecks:{string.Join(";", PlayerDecks.Select(deck => deck.Serialize()))}|");
 
             if (FullCardDeck != null)
                 serializedData.Append($"FullCardDeck:{FullCardDeck.Serialize()}|");
 
-            if (TeamsDecks != null && TeamsDecks.Length > 0)
+            if (TeamsDecks != null)
                 serializedData.Append($"TeamsDecks:{string.Join(";", TeamsDecks.Select(deck => deck.Serialize()))}|");
 
-            if (AlreadySung != null && AlreadySung.Count > 0)
+            if (AlreadySung != null)
                 serializedData.Append($"AlreadySung:{string.Join(",", AlreadySung)}|");
 
             if (TurnSing.HasValue)

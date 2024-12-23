@@ -25,7 +25,33 @@ namespace touti_game_logic
 
             if (IsMasterPlayer())
             {
-                InitializeGameData();
+                if (GameData.FullCardDeck == null)
+                {
+                    InitializeGameDeck();
+                }
+
+                if (GameData.PartFirstPlayer == null)
+                {
+                    Random random = new Random();
+                    GameData.PartFirstPlayer = random.Next(0, 4);
+                }
+                else
+                {
+                    GameData.PartFirstPlayer = (GameData.PartFirstPlayer + 1) % 4;
+                }
+
+                if (GameData.PartFire == null)
+                {
+                    Random random = new Random();
+                    GameData.PartFire = Card.PossibleColors[random.Next(Card.PossibleColors.Count)];
+                }
+
+                if (GameData.PlayerDecks == null)
+                {
+                    DistributeCards();
+                }
+
+                SendGameData();
             }
         }
 
@@ -34,14 +60,49 @@ namespace touti_game_logic
             return client.LocalPlayer.IsMasterClient;
         }
 
-        private void InitializeGameData()
+        private void InitializeGameDeck()
         {
-            Console.WriteLine("InitializeGameData()");
+            Console.WriteLine("InitializeGameDeck()");
             GameData.FullCardDeck = Deck.CreateNewDeck();
             GameData.FullCardDeck.Shuffle();
-            SendGameData();
-
             // Initialize other game data properties as needed
+        }
+
+        private void DistributeCards()
+        {
+            Console.WriteLine("DistributeCards()");
+            GameData.PlayerDecks = new Deck[4];
+            for (int i = 0; i < 4; i++)
+            {
+                GameData.PlayerDecks[i] = new Deck();
+            }
+
+            int currentPlayer = GameData.PartFirstPlayer.Value;
+            while (GameData.FullCardDeck.GetCards().Count > 0)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    for (int j = 0; j < 5; j++)
+                    {
+                        if (GameData.FullCardDeck.GetCards().Count > 0)
+                        {
+                            Card card = GameData.FullCardDeck.GetCards().First();
+                            GameData.FullCardDeck.RemoveCard(card); // Fixed line
+                            GameData.PlayerDecks[currentPlayer].AddCard(card);
+                        }
+                    }
+                    currentPlayer = (currentPlayer + 1) % 4;
+                }
+            }
+
+            // Sort each player's deck
+            for (int i = 0; i < 4; i++)
+            {
+                GameData.PlayerDecks[i].Sort(GameData.PartFire ?? ' ');
+            }
+
+            // Set FullCardDeck to null after distributing the cards
+            GameData.FullCardDeck = null;
         }
 
         private void SendGameData()
@@ -70,7 +131,7 @@ namespace touti_game_logic
 
         private void PrintGameData()
         {
-            Console.WriteLine("Game Data: " + GameData.FullCardDeck.Serialize());
+            Console.WriteLine("Game Data: " + GameData.Serialize());
             // Print other game data properties as needed
         }
     }

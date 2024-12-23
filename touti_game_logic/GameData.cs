@@ -6,31 +6,31 @@ using System.Threading.Tasks;
 
 namespace touti_game_logic
 {
-    internal class GameData
+    internal static class GameData
     {
-        public int[] PartScore { get; set; } = new int[2]; // Score for each team
-        public List<int[]> MatchScoreSheet { get; set; } = new List<int[]>(); // Scores at the end of each round
-        public char? PartFire { get; set; } // Fire color for the current round
-        public int? PartValue { get; set; } // Value of the round
+        public static int[] PartScore { get; set; } = new int[2]; // Score for each team
+        public static List<int[]> MatchScoreSheet { get; set; } = new List<int[]>(); // Scores at the end of each round
+        public static char? PartFire { get; set; } // Fire color for the current round
+        public static int? PartValue { get; set; } // Value of the round
 
-        public int GamePhase { get; set; } // Phase of the game
-        public int[] PlayerEngagement { get; set; } = new int[4]; // Engagement for each player
-        public int? EngagedPlayer { get; set; } // Player who got the engagement
+        public static int? GamePhase { get; set; } // Phase of the game
+        public static int[] PlayerEngagement { get; set; } = new int[4]; // Engagement for each player
+        public static int? EngagedPlayer { get; set; } // Player who got the engagement
 
-        public int PartFirstPlayer { get; set; } // First player in the round
-        public Deck PlayedDeck { get; set; } = new Deck(); // Deck containing the cards played in the current play
+        public static int? PartFirstPlayer { get; set; } // First player in the round
+        public static Deck PlayedDeck { get; set; } = new Deck(); // Deck containing the cards played in the current play
 
-        public Deck[] PlayerDecks { get; set; } = new Deck[4]; // Deck for each player
-        public Deck FullCardDeck { get; set; } = new Deck(); // Full deck for the game
+        public static Deck[] PlayerDecks { get; set; } = new Deck[4]; // Deck for each player
+        public static Deck FullCardDeck { get; set; } = new Deck(); // Full deck for the game
 
-        public Deck[] TeamsDecks { get; set; } = new Deck[2]; // Decks for each team
+        public static Deck[] TeamsDecks { get; set; } = new Deck[2]; // Decks for each team
 
-        public List<char> AlreadySung { get; set; } = new List<char>(); // Colors that were sung in the current round
-        public int TurnSing { get; set; } // What was sung in the current turn
-        public int Turn { get; set; } // Turn number
-        public int TotalSing { get; set; } // Total sing made by the team of the engaged player in a round
+        public static List<char> AlreadySung { get; set; } = new List<char>(); // Colors that were sung in the current round
+        public static int? TurnSing { get; set; } // What was sung in the current turn
+        public static int? Turn { get; set; } // Turn number
+        public static int? TotalSing { get; set; } // Total sing made by the team of the engaged player in a round
 
-        public GameData()
+        static GameData()
         {
             for (int i = 0; i < 4; i++)
             {
@@ -43,31 +43,69 @@ namespace touti_game_logic
             }
         }
 
-        public string Serialize()
+        public static string Serialize()
         {
             var serializedData = new StringBuilder();
-            serializedData.Append($"PartScore:{string.Join(",", PartScore)}|");
-            serializedData.Append($"MatchScoreSheet:{string.Join(";", MatchScoreSheet.Select(scores => string.Join(",", scores)))}|");
-            serializedData.Append($"PartFire:{PartFire}|");
-            serializedData.Append($"PartValue:{PartValue}|");
-            serializedData.Append($"GamePhase:{GamePhase}|");
-            serializedData.Append($"PlayerEngagement:{string.Join(",", PlayerEngagement)}|");
-            serializedData.Append($"EngagedPlayer:{EngagedPlayer}|");
-            serializedData.Append($"PartFirstPlayer:{PartFirstPlayer}|");
-            serializedData.Append($"PlayedDeck:{PlayedDeck.Serialize()}|");
-            serializedData.Append($"PlayerDecks:{string.Join(";", PlayerDecks.Select(deck => deck.Serialize()))}|");
-            serializedData.Append($"FullCardDeck:{FullCardDeck.Serialize()}|");
-            serializedData.Append($"TeamsDecks:{string.Join(";", TeamsDecks.Select(deck => deck.Serialize()))}|");
-            serializedData.Append($"AlreadySung:{string.Join(",", AlreadySung)}|");
-            serializedData.Append($"TurnSing:{TurnSing}|");
-            serializedData.Append($"Turn:{Turn}|");
-            serializedData.Append($"TotalSing:{TotalSing}");
+
+            if (PartScore != null && PartScore.Length > 0)
+                serializedData.Append($"PartScore:{string.Join(",", PartScore)}|");
+
+            if (MatchScoreSheet != null && MatchScoreSheet.Count > 0)
+                serializedData.Append($"MatchScoreSheet:{string.Join(";", MatchScoreSheet.Select(scores => string.Join(",", scores)))}|");
+
+            if (PartFire.HasValue)
+                serializedData.Append($"PartFire:{PartFire}|");
+
+            if (PartValue.HasValue)
+                serializedData.Append($"PartValue:{PartValue}|");
+
+            if (GamePhase.HasValue)
+                serializedData.Append($"GamePhase:{GamePhase}|");
+
+            if (PlayerEngagement != null && PlayerEngagement.Length > 0)
+                serializedData.Append($"PlayerEngagement:{string.Join(",", PlayerEngagement)}|");
+
+            if (EngagedPlayer.HasValue)
+                serializedData.Append($"EngagedPlayer:{EngagedPlayer}|");
+
+            if (PartFirstPlayer.HasValue)
+                serializedData.Append($"PartFirstPlayer:{PartFirstPlayer}|");
+
+            if (PlayedDeck != null)
+                serializedData.Append($"PlayedDeck:{PlayedDeck.Serialize()}|");
+
+            if (PlayerDecks != null && PlayerDecks.Length > 0)
+                serializedData.Append($"PlayerDecks:{string.Join(";", PlayerDecks.Select(deck => deck.Serialize()))}|");
+
+            if (FullCardDeck != null)
+                serializedData.Append($"FullCardDeck:{FullCardDeck.Serialize()}|");
+
+            if (TeamsDecks != null && TeamsDecks.Length > 0)
+                serializedData.Append($"TeamsDecks:{string.Join(";", TeamsDecks.Select(deck => deck.Serialize()))}|");
+
+            if (AlreadySung != null && AlreadySung.Count > 0)
+                serializedData.Append($"AlreadySung:{string.Join(",", AlreadySung)}|");
+
+            if (TurnSing.HasValue)
+                serializedData.Append($"TurnSing:{TurnSing}|");
+
+            if (Turn.HasValue)
+                serializedData.Append($"Turn:{Turn}|");
+
+            if (TotalSing.HasValue)
+                serializedData.Append($"TotalSing:{TotalSing}");
+
+            // Remove the trailing '|'
+            if (serializedData.Length > 0 && serializedData[serializedData.Length - 1] == '|')
+            {
+                serializedData.Length--;
+            }
+
             return serializedData.ToString();
         }
 
-        public static GameData Deserialize(string serializedData)
+        public static void Deserialize(string serializedData)
         {
-            var gameData = new GameData();
             var properties = serializedData.Split('|');
 
             foreach (var property in properties)
@@ -79,57 +117,55 @@ namespace touti_game_logic
                 switch (key)
                 {
                     case "PartScore":
-                        gameData.PartScore = value.Split(',').Select(int.Parse).ToArray();
+                        PartScore = value.Split(',').Select(int.Parse).ToArray();
                         break;
                     case "MatchScoreSheet":
-                        gameData.MatchScoreSheet = value.Split(';').Select(scores => scores.Split(',').Select(int.Parse).ToArray()).ToList();
+                        MatchScoreSheet = value.Split(';').Select(scores => scores.Split(',').Select(int.Parse).ToArray()).ToList();
                         break;
                     case "PartFire":
-                        gameData.PartFire = string.IsNullOrEmpty(value) ? (char?)null : value[0];
+                        PartFire = string.IsNullOrEmpty(value) ? (char?)null : value[0];
                         break;
                     case "PartValue":
-                        gameData.PartValue = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
+                        PartValue = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
                         break;
                     case "GamePhase":
-                        gameData.GamePhase = int.Parse(value);
+                        GamePhase = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
                         break;
                     case "PlayerEngagement":
-                        gameData.PlayerEngagement = value.Split(',').Select(int.Parse).ToArray();
+                        PlayerEngagement = value.Split(',').Select(int.Parse).ToArray();
                         break;
                     case "EngagedPlayer":
-                        gameData.EngagedPlayer = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
+                        EngagedPlayer = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
                         break;
                     case "PartFirstPlayer":
-                        gameData.PartFirstPlayer = int.Parse(value);
+                        PartFirstPlayer = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
                         break;
                     case "PlayedDeck":
-                        gameData.PlayedDeck = Deck.Deserialize(value);
+                        PlayedDeck = Deck.Deserialize(value);
                         break;
                     case "PlayerDecks":
-                        gameData.PlayerDecks = value.Split(';').Select(Deck.Deserialize).ToArray();
+                        PlayerDecks = value.Split(';').Select(Deck.Deserialize).ToArray();
                         break;
                     case "FullCardDeck":
-                        gameData.FullCardDeck = Deck.Deserialize(value);
+                        FullCardDeck = Deck.Deserialize(value);
                         break;
                     case "TeamsDecks":
-                        gameData.TeamsDecks = value.Split(';').Select(Deck.Deserialize).ToArray();
+                        TeamsDecks = value.Split(';').Select(Deck.Deserialize).ToArray();
                         break;
                     case "AlreadySung":
-                        gameData.AlreadySung = value.Split(',').Select(char.Parse).ToList();
+                        AlreadySung = value.Split(',').Select(char.Parse).ToList();
                         break;
                     case "TurnSing":
-                        gameData.TurnSing = int.Parse(value);
+                        TurnSing = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
                         break;
                     case "Turn":
-                        gameData.Turn = int.Parse(value);
+                        Turn = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
                         break;
                     case "TotalSing":
-                        gameData.TotalSing = int.Parse(value);
+                        TotalSing = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
                         break;
                 }
             }
-
-            return gameData;
         }
     }
 }

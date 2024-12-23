@@ -53,6 +53,7 @@
     <Compile Include="Deck.cs" />
     <Compile Include="GameData.cs" />
     <Compile Include="MatchMaking.cs" />
+    <Compile Include="NetworkTouti.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

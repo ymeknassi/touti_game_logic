@@ -60,16 +60,38 @@ namespace touti_game_logic
 
         public string Serialize()
         {
+            if (cards == null || !cards.Any())
+            {
+                return "null";
+            }
             return string.Join("-", cards.Select(card => card.Serialize()));
         }
 
         public static Deck Deserialize(string serializedDeck)
         {
+            if (serializedDeck == "null")
+            {
+                return null;
+            }
+
             var deck = new Deck();
             var cardStrings = serializedDeck.Split('-');
             foreach (var cardString in cardStrings)
             {
                 deck.AddCard(Card.Deserialize(cardString));
+            }
+            return deck;
+        }
+
+        public static Deck CreateNewDeck()
+        {
+            var deck = new Deck();
+            foreach (var color in Card.PossibleColors)
+            {
+                foreach (var value in Card.PossibleValues)
+                {
+                    deck.AddCard(new Card(value, color));
+                }
             }
             return deck;
         }

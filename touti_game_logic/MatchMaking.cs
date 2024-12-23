@@ -170,7 +170,7 @@ class MatchMaking : IConnectionCallbacks, IMatchmakingCallbacks, IInRoomCallback
     {
         foreach (var player in client.CurrentRoom.Players.Values)
         {
-            Console.WriteLine("Player: " + player.NickName);
+            Console.WriteLine("Player: " + player.ActorNumber);
         }
     }
 }

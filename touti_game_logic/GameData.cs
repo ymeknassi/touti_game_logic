@@ -13,7 +13,7 @@ namespace touti_game_logic
         public static char? PartFire { get; set; } // Fire color for the current round
         public static int? PartValue { get; set; } // Value of the round
 
-        public static int? GamePhase { get; set; } // Phase of the game
+        public static int? GamePhase { get; set; } = 0; // Phase of the game
         public static int[] PlayerEngagement { get; set; } // Engagement for each player
         public static int? EngagedPlayer { get; set; } // Player who got the engagement
 
@@ -29,6 +29,8 @@ namespace touti_game_logic
         public static int? TurnSing { get; set; } // What was sung in the current turn
         public static int? Turn { get; set; } // Turn number
         public static int? TotalSing { get; set; } // Total sing made by the team of the engaged player in a round
+
+        public static int? CurrentPlayer { get; set; } // Current player
 
         public static string Serialize()
         {
@@ -80,7 +82,10 @@ namespace touti_game_logic
                 serializedData.Append($"Turn:{Turn}|");
 
             if (TotalSing.HasValue)
-                serializedData.Append($"TotalSing:{TotalSing}");
+                serializedData.Append($"TotalSing:{TotalSing}|");
+
+            if (CurrentPlayer.HasValue)
+                serializedData.Append($"CurrentPlayer:{CurrentPlayer}");
 
             // Remove the trailing '|'
             if (serializedData.Length > 0 && serializedData[serializedData.Length - 1] == '|')
@@ -150,6 +155,9 @@ namespace touti_game_logic
                         break;
                     case "TotalSing":
                         TotalSing = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
+                        break;
+                    case "CurrentPlayer":
+                        CurrentPlayer = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
                         break;
                 }
             }

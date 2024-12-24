@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Card.cs" />
     <Compile Include="Deck.cs" />
+    <Compile Include="ExecuteOtherGameInstances.cs" />
     <Compile Include="GameData.cs" />
     <Compile Include="MatchMaking.cs" />
     <Compile Include="NetworkTouti.cs" />

@@ -108,6 +108,13 @@ namespace touti_game_logic
             {
                 Console.WriteLine("Master Client");
                 this.client.CurrentRoom.MaxPlayers = 4;
+                
+                if (client.CurrentRoom.PlayerCount < 4)   ///TEMP ONLY FOR DEV PURPOSES AND TOSTART OTHER GAMES INSTANCES AUTOMATICALLY
+                {
+                    ExecuteOtherGameInstances.StartInstances(3);
+                }
+
+
             }
             else
             {
@@ -119,6 +126,10 @@ namespace touti_game_logic
 
             // Initialize NetworkTouti
             networkTouti = new NetworkTouti(client);
+
+            
+
+
         }
 
         public void OnPlayerEnteredRoom(Player newPlayer)
@@ -158,7 +169,8 @@ namespace touti_game_logic
 
         public void OnRoomPropertiesUpdate(PhotonHashtable propertiesThatChanged)
         {
-            Console.WriteLine("OnRoomPropertiesUpdate");
+            Console.WriteLine("OnRoomPropertiesUpdate");            
+
         }
 
         public void OnPlayerPropertiesUpdate(Player targetPlayer, PhotonHashtable changedProps)
@@ -180,5 +192,7 @@ namespace touti_game_logic
                 Console.WriteLine("Player: " + player.ActorNumber);
             }
         }
+
+
     }
 }

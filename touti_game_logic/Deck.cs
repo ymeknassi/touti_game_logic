@@ -74,12 +74,13 @@ namespace touti_game_logic
 
         public static Deck Deserialize(string serializedDeck)
         {
+            var deck = new Deck();
             if (serializedDeck == "null")
             {
-                return null;
+                return deck;
             }
 
-            var deck = new Deck();
+            
             var cardStrings = serializedDeck.Split('-');
             foreach (var cardString in cardStrings)
             {

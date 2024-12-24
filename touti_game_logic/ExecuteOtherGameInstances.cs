@@ -6,6 +6,7 @@ namespace touti_game_logic
 {
     public static class ExecuteOtherGameInstances
     {
+
         // Importing required functions from user32.dll and kernel32.dll
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
@@ -23,12 +24,17 @@ namespace touti_game_logic
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr GetConsoleWindow();
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool FreeConsole();
+
         const int SW_SHOWNORMAL = 1;
         const int SW_HIDE = 0;
 
         // Constants for SetWindowPos uFlags
         const uint SWP_NOZORDER = 0x0004;
         const uint SWP_NOACTIVATE = 0x0010;
+
+        private static Process[] processes;
 
         public static void StartInstances(int instanceCount = 3)
         {
@@ -42,7 +48,7 @@ namespace touti_game_logic
             int[] windowXPositions = { 850, 10, 850 }; // X coordinates for the instances
             int[] windowYPositions = { 10, 450, 450 }; // Y coordinates for the instances
 
-            Process[] processes = new Process[instanceCount];
+            processes = new Process[instanceCount];
 
             // Start the specified number of instances of the executable
             for (int i = 0; i < instanceCount; i++)
@@ -78,6 +84,37 @@ namespace touti_game_logic
             {
                 Console.WriteLine("Failed to get the handle of the current process window.");
             }
+        }
+
+        public static void CloseAllInstances()
+        {
+            // Disconnect from Photon server for each instance
+            foreach (var process in processes)
+            {
+                if (process != null && !process.HasExited)
+                {
+                    // Assuming each instance has a method to disconnect from Photon server
+                    // This can be done via IPC, command line arguments, or other means
+                    // For simplicity, we assume a method DisconnectFromPhoton() exists
+                    // DisconnectFromPhoton(process);
+
+                    // Close the process
+                    process.Kill();
+                    process.WaitForExit();
+                }
+            }
+
+            // Close the current instance
+            DisconnectFromPhoton();
+            FreeConsole();
+            Environment.Exit(0);
+        }
+
+        private static void DisconnectFromPhoton()
+        {
+            // Implement the logic to disconnect from Photon server
+            // This is a placeholder for the actual disconnection logic
+            Console.WriteLine("Disconnecting from Photon server...");
         }
     }
 }

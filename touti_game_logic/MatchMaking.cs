@@ -23,13 +23,13 @@ namespace touti_game_logic
             this.client.StateChanged += this.OnStateChange;
 
             this.client.ConnectUsingSettings(new AppSettings() { AppIdRealtime = "ff9b7d06-6d94-4a3b-948f-336bbc30e7c9", FixedRegion = "usw" });
-
+            //this.client.RealtimePeer.DisconnectTimeout = 120000;
             Thread t = new Thread(this.Loop);
             t.Start();
 
-            Console.WriteLine("Running until key pressed.");
-            Console.ReadKey();
-            this.quit = true;
+            //.WriteLine("Running until key pressed.");
+            //Console.ReadKey();
+            //this.quit = true;
         }
 
         private void QuickMatch()
@@ -42,7 +42,8 @@ namespace touti_game_logic
             while (!this.quit)
             {
                 this.client.Service();
-                Thread.Sleep(33);
+                Thread.Sleep(10);
+                this.client.SendOutgoingCommands();
             }
         }
 
@@ -127,9 +128,6 @@ namespace touti_game_logic
             // Initialize NetworkTouti
             networkTouti = new NetworkTouti(client);
 
-            
-
-
         }
 
         public void OnPlayerEnteredRoom(Player newPlayer)
@@ -184,12 +182,20 @@ namespace touti_game_logic
         }
 
         #endregion
-
         private void ListPlayers()
         {
             foreach (var player in client.CurrentRoom.Players.Values)
             {
-                Console.WriteLine("Player: " + player.ActorNumber);
+                string playerInfo = $"Player: {player.ActorNumber}";
+                if (player.IsMasterClient)
+                {
+                    playerInfo += " (Master Client)";
+                }
+                if (player.ActorNumber == client.LocalPlayer.ActorNumber)
+                {
+                    playerInfo += " (Current Client)";
+                }
+                Console.WriteLine(playerInfo);
             }
         }
 

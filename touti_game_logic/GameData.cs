@@ -13,12 +13,14 @@ namespace touti_game_logic
         public static char? PartFire { get; set; } // Fire color for the current round
         public static int? PartValue { get; set; } // Value of the round
 
-        public static int? GamePhase { get; set; } // Phase of the game
+        public static int? GamePhase { get; set; } = 0; // Phase of the game
         public static int[] PlayerEngagement { get; set; } // Engagement for each player
         public static int? EngagedPlayer { get; set; } // Player who got the engagement
 
         public static int? PartFirstPlayer { get; set; } // First player in the round
-        public static Deck PlayedDeck { get; set; } // Deck containing the cards played in the current play
+
+        public static int? CurrentPlayer { get; set; } // Current player
+        public static Deck PlayedDeck { get; set; } = new Deck(); // Deck containing the cards played in the current play
 
         public static Deck[] PlayerDecks { get; set; } // Deck for each player
         public static Deck FullCardDeck { get; set; } // Full deck for the game
@@ -80,7 +82,10 @@ namespace touti_game_logic
                 serializedData.Append($"Turn:{Turn}|");
 
             if (TotalSing.HasValue)
-                serializedData.Append($"TotalSing:{TotalSing}");
+                serializedData.Append($"TotalSing:{TotalSing}|");
+
+            if (CurrentPlayer.HasValue)
+                serializedData.Append($"CurrentPlayer:{CurrentPlayer}");
 
             // Remove the trailing '|'
             if (serializedData.Length > 0 && serializedData[serializedData.Length - 1] == '|')
@@ -93,6 +98,25 @@ namespace touti_game_logic
 
         public static void Deserialize(string serializedData)
         {
+            // Reset all properties to their initial values or null
+            PartScore = null;
+            MatchScoreSheet = null;
+            PartFire = null;
+            PartValue = null;
+            GamePhase = 0;
+            PlayerEngagement = null;
+            EngagedPlayer = null;
+            PartFirstPlayer = null;
+            PlayedDeck = new Deck();
+            PlayerDecks = null;
+            FullCardDeck = null;
+            TeamsDecks = null;
+            AlreadySung = null;
+            TurnSing = null;
+            Turn = null;
+            TotalSing = null;
+            CurrentPlayer = null;
+
             var properties = serializedData.Split('|');
 
             foreach (var property in properties)
@@ -150,6 +174,9 @@ namespace touti_game_logic
                         break;
                     case "TotalSing":
                         TotalSing = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
+                        break;
+                    case "CurrentPlayer":
+                        CurrentPlayer = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
                         break;
                 }
             }
